@@ -1,12 +1,11 @@
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 /**
  * Author: Ilya Varlamov aka privr@tnik
@@ -15,57 +14,50 @@ import java.net.URL;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        final String path = "http://degas24.com/"; //"http://developers.sensis.com.au/docs/examples/java";
-        InputStream stream = null;
-        StringBuilder builder = new StringBuilder();
+        final String path = "http://www.fontanka.ru/";
+
+        StringBuilder modelPage = null;
+        BufferedReader bufferedReader = null;
 
         try {
             URL url = new URL(path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.connect();
+            conn.setConnectTimeout(5000);
 
             if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
-                stream = conn.getInputStream();
-                int tmp;
 
-                while((tmp = stream.read()) != -1){
-                    builder.append((char) tmp);
+                bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "Windows-1251"));
+                modelPage = new StringBuilder();
+
+                String tmp;
+
+                while((tmp = bufferedReader.readLine()) != null) {
+                    modelPage.append(tmp);
+                    modelPage.append("\n\r");
                 }
-                parserPage(builder);
+                parserPage(modelPage);
             }
 
         }catch (MalformedURLException e) {
             e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
         }finally {
-            if(stream != null){
-                closeStream(stream);
+            if(bufferedReader != null){
+                bufferedReader.close();
             }
         }
     }
 
-    private static void closeStream(@NotNull Closeable cloneable){
-        try {
-            cloneable.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private static void parserPage(@NotNull StringBuilder builder) {
 
-    private static void parserPage(@NotNull CharSequence sequence){
-        StringBuilder builder = null;
+        String tmp = builder.toString().
+                replaceAll("<(title)+>.*</title+>", "").
+                replaceAll("<[^>]+>", "").
+                replaceAll("&nbsp;", "");
 
-        if(sequence instanceof StringBuilder){
-            builder = (StringBuilder) sequence;
-            String tmp = builder.toString().replaceAll("<(title)+>.*</title+>", "").
-                    replaceAll("<[^>]+>", "").
-                    replaceAll("&nbsp;", "");
+        System.out.print(tmp);
 
-            System.out.print(tmp);
-        }
     }
 
 }

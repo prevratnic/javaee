@@ -18,14 +18,16 @@ public class Server {
 
         DatagramSocket datagramSocket = new DatagramSocket(serverPort);
         DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
-        datagramSocket.receive(datagramPacket);
 
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer);
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        while (true){
+            datagramSocket.receive(datagramPacket);
 
-        Subject t1 = (Subject) objectInputStream.readObject();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer);
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
 
-        System.out.println(t1);
+            Subject t1 = (Subject) objectInputStream.readObject();
 
+            System.out.println(t1);
+        }
     }
 }
