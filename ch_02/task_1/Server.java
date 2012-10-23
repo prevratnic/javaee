@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -15,40 +16,34 @@ public class Server {
     public static void main(String[] args) throws IOException {
 
         ServerSocket serverSocket = new ServerSocket(8080);
-        Socket socket = serverSocket.accept();
-        //socket.setSoTimeout(5000);
+        Socket socket = null;
 
         try{
+            while (true) {
+                socket = serverSocket.accept();
+                Scanner scanner = new Scanner(socket.getInputStream());
 
-            //Scanner scanner = new Scanner(socket.getInputStream());
-            //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            InputStream inputStream = socket.getInputStream();
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-            printWriter.print(getCurrentDate());
-            printWriter.flush();
+                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
 
-            int tmp;
-            while ((tmp = inputStream.read()) != -1){
-                System.out.print((char)tmp);
+                if (scanner.nextLine().trim().equals("date")) {
+                    printWriter.println(getCurrentDate());
+                    printWriter.flush();
+                } else {
+                    printWriter.println(getCurrentTime());
+                    printWriter.flush();
+                }
             }
-
-            //System.out.print(bufferedReader.readLine());
-//            if(scanner.nextLine().equals("date")){
-//                printWriter.println(getCurrentDate());
-//                printWriter.flush();
-//            }
-
         }finally {
-            socket.close();
+            if(socket != null) socket.close();
             serverSocket.close();
         }
     }
 
     private static String getCurrentDate(){
-        return new Date().toString();
+        return new SimpleDateFormat("dd.MM.yyyy").format(new Date());
     }
 
     private static String getCurrentTime(){
-        return new Date().toString();
+        return new SimpleDateFormat("hh:mm").format(new Date());
     }
 }

@@ -13,31 +13,24 @@ import java.util.Scanner;
 public class Client {
     public static void main(String[] args) throws IOException {
         sendMessage("date");
-       // sendMessage("time");
+        sendMessage("time");
     }
 
     private static void sendMessage(@NotNull String message) throws IOException{
 
         Socket socket = new Socket("localhost", 8080);
-        //socket.setSoTimeout(5000);
+
         try{
 
-            //Scanner scanner = new Scanner(socket.getInputStream());
-            //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            InputStream inputStream = socket.getInputStream();
+            Scanner scanner = new Scanner(socket.getInputStream());
 
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             printWriter.print(message);
             printWriter.flush();
+            socket.shutdownOutput();
 
-            int tmp;
-            while ((tmp = inputStream.read()) != -1){
-                System.out.print((char)tmp);
-            }
-
-            //System.out.print(scanner.nextLine());
-           // System.out.print(bufferedReader.readLine());
+            System.out.println(scanner.nextLine());
+            socket.shutdownInput();
 
         }finally {
             socket.close();
