@@ -48,15 +48,15 @@ public class MainServlet extends HttpServlet {
         }
     }
 
-    private String parserValue (@NotNull String str){
+    private String parserValue(@NotNull String str){
 
         String result;
 
         try{
             result = String.valueOf(Integer.parseInt(str) * 2);
-
         }catch (NumberFormatException e){
-            result = str.trim();
+            String[] tmp = str.trim().split("\\s+");
+            result = String.valueOf(tmp.length);
         }
 
         return result;
