@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Time: 4:02
  */
 
-public class Server {
+public class TCPServer {
 
     public static void main(String[] args) throws IOException {
 

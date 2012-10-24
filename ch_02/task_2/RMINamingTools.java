@@ -7,10 +7,12 @@ import javax.naming.*;
  */
 
 public class RMINamingTools {
+
     public static void main(String[] args) {
+
         try {
             Context context = new InitialContext();
-            NamingEnumeration<NameClassPair> enumeration = context.list("mytest");
+            NamingEnumeration<NameClassPair> enumeration = context.list("rmi:");
 
             while (enumeration.hasMore()){
                 System.out.println(enumeration.next());

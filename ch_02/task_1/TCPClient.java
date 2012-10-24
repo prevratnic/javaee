@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Time: 4:01
  */
 
-public class Client {
+public class TCPClient {
     public static void main(String[] args) throws IOException {
         sendMessage("date");
         sendMessage("time");
