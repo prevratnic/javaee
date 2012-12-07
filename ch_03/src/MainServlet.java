@@ -50,6 +50,10 @@ public class MainServlet extends HttpServlet {
 
     private String parserValue(@NotNull String str){
 
+        if(str.trim().length() < 1){
+            return "form is empty";
+        }
+
         String result;
 
         try{

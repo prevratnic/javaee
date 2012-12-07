@@ -18,8 +18,13 @@ public class TCPServer {
         ServerSocket serverSocket = new ServerSocket(8080);
         Socket socket = null;
 
+        System.out.println("Server start...");
+
+        int count = 0;
+
         try{
             while (true) {
+                System.out.println("Connect count " + count++);
                 socket = serverSocket.accept();
                 Scanner scanner = new Scanner(socket.getInputStream());
 
